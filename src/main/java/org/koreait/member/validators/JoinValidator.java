@@ -1,8 +1,10 @@
 package org.koreait.member.validators;
 
+import lombok.RequiredArgsConstructor;
 import org.koreait.global.validators.PasswordValidator;
 import org.koreait.member.controllers.RequestAgree;
 import org.koreait.member.controllers.RequestJoin;
+import org.koreait.member.repositories.MemberRepository;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
@@ -13,7 +15,11 @@ import java.time.Period;
 
 @Lazy
 @Component
+@RequiredArgsConstructor
 public class JoinValidator implements Validator, PasswordValidator {
+
+    private final MemberRepository memberRepository;
+
     @Override
     public boolean supports(Class<?> clazz) {
         return clazz.isAssignableFrom(RequestAgree.class) || clazz.isAssignableFrom(RequestJoin.class);
@@ -26,7 +32,7 @@ public class JoinValidator implements Validator, PasswordValidator {
             return;
         }
 
-       if (target instanceof RequestJoin requestJoin) {
+        if (target instanceof RequestJoin requestJoin) {
             validateJoin(requestJoin, errors);
         } else {
             validateAgree((RequestAgree)target, errors);
@@ -74,6 +80,11 @@ public class JoinValidator implements Validator, PasswordValidator {
         String confirmPassword = form.getConfirmPassword();
         LocalDate birthDt = form.getBirthDt();
 
+        // 1. 이메일 중복 여부 체크
+        if (memberRepository.exists(email)) {
+            errors.rejectValue("email", "Duplicated");
+        }
+
         // 2. 비밀번호 복잡성 S
         if (!alphaCheck(password, false) || !numberCheck(password) || !specialCharsCheck(password)) {
             errors.rejectValue("password", "Complexity");
@@ -95,4 +106,3 @@ public class JoinValidator implements Validator, PasswordValidator {
         // 4. 생년월일을 입력받으면 만 14세 이상만 가입 가능하게 통제 E
     }
 }
-

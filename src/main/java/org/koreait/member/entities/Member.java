@@ -16,6 +16,8 @@ public class Member extends BaseEntity {
     private Long seq; // 회원번호 기본키
     @Column(length = 65, nullable = false, unique = true)
     private String email; // 이메일
+    @Column(length = 65, nullable = false)
+    private String password;
     @Column(length = 40, nullable = false)
     private String name;
     @Column(length = 40, nullable = false)
@@ -44,5 +46,6 @@ public class Member extends BaseEntity {
 
     @ToString.Exclude // 배제
     @OneToMany(mappedBy = "member") // Many의 키 설정
+
     private List<Authorities> authorities;
 }
