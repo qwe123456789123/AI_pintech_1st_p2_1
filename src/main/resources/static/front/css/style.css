@@ -161,7 +161,7 @@ header > .right li {
     margin: 0 15px;
 }
 
-header > .right li a {
+header >.right li a {
     font-size: 1.077rem;
     color: #222;
 }
