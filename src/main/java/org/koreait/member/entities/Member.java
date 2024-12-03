@@ -6,6 +6,7 @@ import lombok.ToString;
 import org.koreait.global.entities.BaseEntity;
 import org.koreait.member.constants.Gender;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -23,14 +24,14 @@ public class Member extends BaseEntity {
     @Column(length = 40, nullable = false)
     private String nickName;
     @Column(nullable = false)
-    private LocalDateTime birthDt; // 생년월일
+    private LocalDate birthDt; // 생년월일
 
     @Enumerated(EnumType.STRING)
     @Column(length = 10, nullable = false)
     private Gender gender;
     @Column(length = 10, nullable = false)
     private String zipCode;
-    @Column(length = 10, nullable = false)
+    @Column(length = 100, nullable = false)
     private String address;
     @Column(length = 100)
     private String addressSub;
@@ -48,4 +49,7 @@ public class Member extends BaseEntity {
     @OneToMany(mappedBy = "member") // Many의 키 설정
 
     private List<Authorities> authorities;
+
+    // 비밀번호 변경 일시
+    private LocalDateTime credentialChangedAt;
 }

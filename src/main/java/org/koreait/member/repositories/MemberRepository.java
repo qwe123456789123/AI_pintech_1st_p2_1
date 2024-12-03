@@ -12,8 +12,15 @@ public  interface MemberRepository extends JpaRepository<Member,Long>, QuerydslP
     @EntityGraph(attributePaths = "authorities")
     Optional<Member> findByEmail(String email);
 
+//save(Member entity): 엔터티 저장.
+//findById(Long id): 기본 키로 엔터티 조회.
+//findAll(): 모든 엔터티 조회.
+//deleteById(Long id): 기본 키로 엔터티 삭제.
+
     default boolean exists (String email){
         QMember member = QMember.member;
         return exists(member.email.eq(email));
     }
 }
+
+// authorities - @OneToMany 관계로, Member와 Authority 엔터티가 연결되어 있음
