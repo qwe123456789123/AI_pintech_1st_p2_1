@@ -9,28 +9,33 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class MemberUtil {
-    public boolean isLogin(){
+
+    public boolean isLogin() {
         return getMember() != null;
     }
 
     /**
      * 관리자 여부
-     * 권한 - MANAGER, ADMIN
+     *  권한 - MANAGER, ADMIN
      * @return
      */
     public boolean isAdmin() {
-        return isLogin() && getMember().getAuthorities().stream().anyMatch(a -> a.getAuthority() == Authority.ADMIN || a.getAuthority() == Authority.MANAGER);
+         return isLogin() &&
+                    getMember().getAuthorities().stream()
+                            .anyMatch(a -> a.getAuthority() == Authority.ADMIN || a.getAuthority() == Authority.MANAGER);
     }
+
     /**
-     * 로그인 한 회원의 정보
+     * 로그인 한 회원의 정보 조회
+     *
+     * @return
      */
-    public Member getMember(){
+    public Member getMember() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (auth.isAuthenticated() && auth.getPrincipal() instanceof MemberInfo memberInfo){
+        if (auth.isAuthenticated() && auth.getPrincipal() instanceof MemberInfo memberInfo) {
             return memberInfo.getMember();
         }
+
         return null;
     }
 }
-// isAuthenticated 인증 상태인지 확인하고
-// MemberInfo가 MemberUtil쪽의 객체인지를 확인

@@ -32,7 +32,7 @@ public class JoinValidator implements Validator, PasswordValidator {
             return;
         }
 
-        if (target instanceof RequestJoin requestJoin) {
+       if (target instanceof RequestJoin requestJoin) {
             validateJoin(requestJoin, errors);
         } else {
             validateAgree((RequestAgree)target, errors);
@@ -106,3 +106,4 @@ public class JoinValidator implements Validator, PasswordValidator {
         // 4. 생년월일을 입력받으면 만 14세 이상만 가입 가능하게 통제 E
     }
 }
+

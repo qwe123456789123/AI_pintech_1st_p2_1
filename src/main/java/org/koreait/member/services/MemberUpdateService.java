@@ -77,8 +77,8 @@ public class MemberUpdateService {
             QAuthorities qAuthorities = QAuthorities.authorities;
             List<Authorities> items = (List<Authorities>) authoritiesRepository.findAll(qAuthorities.member.eq(member));
             if (items != null) {
-                authoritiesRepository.deleteAll(items);
-                authoritiesRepository.flush();
+               authoritiesRepository.deleteAll(items);
+               authoritiesRepository.flush();
             }
 
 

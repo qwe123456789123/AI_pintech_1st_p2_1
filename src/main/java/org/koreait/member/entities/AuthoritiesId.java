@@ -1,6 +1,5 @@
 package org.koreait.member.entities;
 
-
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;

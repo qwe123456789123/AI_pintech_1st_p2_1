@@ -3,10 +3,10 @@ package org.koreait.member.controllers;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.koreait.global.annotations.ApplyErrorPage;
 import org.koreait.global.libs.Utils;
 import org.koreait.member.services.MemberUpdateService;
 import org.koreait.member.validators.JoinValidator;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -19,11 +19,12 @@ import java.util.List;
 
 @Slf4j
 @Controller
+@ApplyErrorPage
 @RequestMapping("/member")
 @RequiredArgsConstructor
 @SessionAttributes({"requestAgree", "requestLogin"})
 public class MemberController {
-
+    
     private final Utils utils;
     private final JoinValidator joinValidator; // 회원 가입 검증
     private final MemberUpdateService updateService; // 회원 가입 처리
@@ -61,6 +62,7 @@ public class MemberController {
 
         return utils.tpl("member/login");
     }
+
 
     /**
      * 회원가입 약관 동의
@@ -126,7 +128,7 @@ public class MemberController {
 
     /**
      * 공통 처리 부분
-     *
+     * 
      * @param mode
      * @param model
      */

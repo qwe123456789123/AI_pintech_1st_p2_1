@@ -14,26 +14,34 @@ import java.util.List;
 @Entity
 public class Member extends BaseEntity {
     @Id @GeneratedValue
-    private Long seq; // 회원번호 기본키
-    @Column(length = 65, nullable = false, unique = true)
+    private Long seq; // 회원 번호
+
+    @Column(length=65, nullable = false, unique = true)
     private String email; // 이메일
-    @Column(length = 65, nullable = false)
+
+    @Column(length=65, nullable = false)
     private String password;
-    @Column(length = 40, nullable = false)
+
+    @Column(length=40, nullable = false)
     private String name;
-    @Column(length = 40, nullable = false)
+
+    @Column(length=40, nullable = false)
     private String nickName;
+
     @Column(nullable = false)
     private LocalDate birthDt; // 생년월일
 
     @Enumerated(EnumType.STRING)
-    @Column(length = 10, nullable = false)
+    @Column(length=10, nullable = false)
     private Gender gender;
-    @Column(length = 10, nullable = false)
+
+    @Column(length=10, nullable = false)
     private String zipCode;
-    @Column(length = 100, nullable = false)
+
+    @Column(length=100, nullable = false)
     private String address;
-    @Column(length = 100)
+
+    @Column(length=100)
     private String addressSub;
 
     private boolean requiredTerms1;
@@ -42,12 +50,11 @@ public class Member extends BaseEntity {
 
     private boolean requiredTerms3;
 
-    @Column(length = 50)
+    @Column(length=50)
     private String optionalTerms; // 선택 약관
 
-    @ToString.Exclude // 배제
-    @OneToMany(mappedBy = "member") // Many의 키 설정
-
+    @ToString.Exclude
+    @OneToMany(mappedBy = "member")
     private List<Authorities> authorities;
 
     // 비밀번호 변경 일시

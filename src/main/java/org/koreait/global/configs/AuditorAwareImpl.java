@@ -12,14 +12,17 @@ import java.util.Optional;
 @Component
 @RequiredArgsConstructor
 public class AuditorAwareImpl implements AuditorAware<String> {
+
     private final MemberUtil memberUtil;
+
     @Override
     public Optional<String> getCurrentAuditor() {
+
         String email = null;
-        if (memberUtil.isLogin()){
+        if (memberUtil.isLogin()) {
             email = memberUtil.getMember().getEmail();
         }
+
         return Optional.ofNullable(email);
-        // ofNullable null 값도 허용하겠다
     }
 }

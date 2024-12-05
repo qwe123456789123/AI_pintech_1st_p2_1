@@ -15,6 +15,7 @@ public class BeansConfig {
     public RestTemplate restTemplate() {
         return new RestTemplate();
     }
+
     @Lazy
     @Bean
     public ModelMapper modelMapper() {

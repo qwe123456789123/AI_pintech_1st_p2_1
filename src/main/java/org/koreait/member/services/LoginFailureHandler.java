@@ -57,7 +57,7 @@ public class LoginFailureHandler implements AuthenticationFailureHandler {
             form.setErrorCodes(List.of("Failure.disabled.login"));
         }
 
-        System.out.println(email);
+        System.out.println(exception);
 
         session.setAttribute("requestLogin", form);
 

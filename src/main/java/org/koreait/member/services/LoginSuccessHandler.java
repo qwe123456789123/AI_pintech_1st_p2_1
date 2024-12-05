@@ -18,6 +18,11 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
         // requestLogin 세션값 비우기
         session.removeAttribute("requestLogin");
 
+        // UserDetails 구현체
+
+        //MemberInfo memberInfo = (MemberInfo)authentication.getPrincipal();
+        //System.out.println(memberInfo);
+
         /**
          * 로그인 성공시 페이지 이동
          * 1) redirectUrl에 지정된 주소
