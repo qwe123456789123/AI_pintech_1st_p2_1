@@ -54,15 +54,19 @@ public class FileInfoService  {
         if (status != FileStatus.ALL) {
             andBuilder.and(fileInfo.done.eq(status == FileStatus.DONE));
         }
+
         List<FileInfo> items = (List<FileInfo>)infoRepository.findAll(andBuilder, Sort.by(asc("createdAt")));
 
         // 추가 정보 처리
         items.forEach(this::addInfo);
+
         return items;
     }
+
     public List<FileInfo> getList(String gid, String location) {
         return getList(gid, location, FileStatus.DONE);
     }
+
     public List<FileInfo> getList(String gid) { // 파일 그룹작업 완료된 파일
         return getList(gid, null);
     }
@@ -78,6 +82,11 @@ public class FileInfoService  {
 
         // fileUrl - 접근할 수 있는 주소(브라우저)
         item.setFileUrl(getFileUrl(item));
+
+        // thumbUrl - 이미지 형식인 경우
+        if (item.getContentType().contains("image/")) {
+            item.setThumbUrl(String.format("%s/api/file/thumb?seq=%d", request.getContextPath(), item.getSeq()));
+        }
     }
 
     public String getFilePath(FileInfo item) {
