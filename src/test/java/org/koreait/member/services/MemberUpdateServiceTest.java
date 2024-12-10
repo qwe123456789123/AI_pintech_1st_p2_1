@@ -23,37 +23,37 @@ import java.util.Locale;
 @ActiveProfiles({"default", "test"})
 public class MemberUpdateServiceTest {
 
-     @Autowired
-     private MemberUpdateService updateService;
+    @Autowired
+    private MemberUpdateService updateService;
 
-     @Autowired
-     private AuthoritiesRepository authoritiesRepository;
+    @Autowired
+    private AuthoritiesRepository authoritiesRepository;
 
-     @Autowired
-     private MemberRepository memberRepository;
+    @Autowired
+    private MemberRepository memberRepository;
 
-     private RequestJoin form;
+    private RequestJoin form;
 
-     @BeforeEach
-     void init() {
-         Faker faker = new Faker(Locale.KOREA);
+    @BeforeEach
+    void init() {
+        Faker faker = new Faker(Locale.KOREA);
 
-         form = new RequestJoin();
-         form.setEmail(faker.internet().emailAddress());
-         form.setPassword("_aA123456");
-         form.setName(faker.name().name());
-         form.setBirthDt(LocalDate.now().minusYears(20L));
-         form.setZipCode(faker.address().zipCode());
-         form.setAddress(faker.address().fullAddress());
-         form.setAddressSub(faker.address().buildingNumber());
-         form.setNickName(faker.name().name());
-         form.setGender(Gender.MALE);
-         form.setRequiredTerms1(true);
-         form.setRequiredTerms2(true);
-         form.setRequiredTerms3(true);
-         form.setOptionalTerms(List.of("advertisement"));
-         System.out.println(form);
-     }
+        form = new RequestJoin();
+        form.setEmail(faker.internet().emailAddress());
+        form.setPassword("_aA123456");
+        form.setName(faker.name().name());
+        form.setBirthDt(LocalDate.now().minusYears(20L));
+        form.setZipCode(faker.address().zipCode());
+        form.setAddress(faker.address().fullAddress());
+        form.setAddressSub(faker.address().buildingNumber());
+        form.setNickName(faker.name().name());
+        form.setGender(Gender.MALE);
+        form.setRequiredTerms1(true);
+        form.setRequiredTerms2(true);
+        form.setRequiredTerms3(true);
+        form.setOptionalTerms(List.of("advertisement"));
+        System.out.println(form);
+    }
 
     @Test
     @DisplayName("회원 가입 기능 테스트")
@@ -69,9 +69,9 @@ public class MemberUpdateServiceTest {
 
     @Test
     void authoritiesTest() {
-         updateService.process(form);
+        updateService.process(form);
 
-         Member member = memberRepository.findByEmail(form.getEmail()).orElse(null);
+        Member member = memberRepository.findByEmail(form.getEmail()).orElse(null);
         System.out.println(member);
 
         QAuthorities qAuthorities = QAuthorities.authorities;
