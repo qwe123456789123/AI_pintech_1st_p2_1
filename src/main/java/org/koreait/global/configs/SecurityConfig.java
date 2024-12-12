@@ -6,6 +6,7 @@ import org.koreait.member.services.MemberAccessDeniedHandler;
 import org.koreait.member.services.MemberAuthenticationExceptionHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -17,6 +18,7 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
  *
  */
 @Configuration
+@EnableMethodSecurity
 public class SecurityConfig {
 
     @Bean
@@ -24,16 +26,16 @@ public class SecurityConfig {
 
         /* 인증 설정 S - 로그인, 로그아웃 */
         http.formLogin(c -> {
-           c.loginPage("/member/login") // 로그인 양식을 처리할 주소
-                   .usernameParameter("email")
-                   .passwordParameter("password")
-                   .failureHandler(new LoginFailureHandler())
-                   .successHandler(new LoginSuccessHandler());
+            c.loginPage("/member/login") // 로그인 양식을 처리할 주소
+                    .usernameParameter("email")
+                    .passwordParameter("password")
+                    .failureHandler(new LoginFailureHandler())
+                    .successHandler(new LoginSuccessHandler());
         });
 
         http.logout(c -> {
-           c.logoutRequestMatcher(new AntPathRequestMatcher("/member/logout"))
-                   .logoutSuccessUrl("/member/login");
+            c.logoutRequestMatcher(new AntPathRequestMatcher("/member/logout"))
+                    .logoutSuccessUrl("/member/login");
         });
         /* 인증 설정 E */
 
@@ -50,7 +52,7 @@ public class SecurityConfig {
          * hasAnyRole(...)
          */
         http.authorizeHttpRequests(c -> {
-            c.requestMatchers("/mypage/**").authenticated() // 인증한 회원 
+            c.requestMatchers("/mypage/**").authenticated() // 인증한 회원
                     .requestMatchers("/member/login", "/member/join", "/member/agree").anonymous() // 미인증 회원
                     .requestMatchers("/admin/**").hasAnyAuthority("MANAGER", "ADMIN") // 관리자 페이지는 MANAGER, ADMIN 권한
                     .anyRequest().permitAll(); // 나머지 페이지는 모두 접근 가능

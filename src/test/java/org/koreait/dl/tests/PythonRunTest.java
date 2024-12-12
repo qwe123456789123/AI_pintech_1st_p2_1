@@ -47,7 +47,7 @@ public class PythonRunTest {
     void test3() {
         // python predict.py "[[ 123151481,  88790998,  16140196,   94127238,  16784415,   138504672, -157161094, -65513703,  99961796 , -80484811]]"
 
-        //trainService.process();
+       // trainService.process();
 
         int[] item =  { 123151481,  88790998,  16140196,   94127238,  16784415,   138504672, -157161094, -65513703,  99961796 , -80484811};
         List<int[]> items = List.of(item);
