@@ -8,6 +8,7 @@ import lombok.Data;
 import org.koreait.member.constants.Gender;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 
 @Data

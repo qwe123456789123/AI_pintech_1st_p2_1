@@ -2,16 +2,16 @@ package org.koreait.global.libs;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.koreait.file.entities.FileInfo;
+import org.koreait.file.services.FileInfoService;
 import org.springframework.context.MessageSource;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.Errors;
 import org.springframework.validation.FieldError;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Component
@@ -20,6 +20,7 @@ public class Utils {
 
     private final HttpServletRequest request;
     private final MessageSource messageSource;
+    private final FileInfoService fileInfoService;
 
     public boolean isMobile() {
 
@@ -28,7 +29,7 @@ public class Utils {
         String pattern = ".*(iPhone|iPod|iPad|BlackBerry|Android|Windows CE|LG|MOT|SAMSUNG|SonyEricsson).*";
 
 
-        return ua.matches(pattern);
+        return StringUtils.hasText(ua) && ua.matches(pattern);
     }
 
     /**
@@ -57,13 +58,13 @@ public class Utils {
 
     public List<String> getMessages(String[] codes) {
 
-            return Arrays.stream(codes).map(c -> {
-                try {
-                    return getMessage(c);
-                } catch (Exception e) {
-                    return "";
-                }
-            }).filter(s -> !s.isBlank()).toList();
+        return Arrays.stream(codes).map(c -> {
+            try {
+                return getMessage(c);
+            } catch (Exception e) {
+                return "";
+            }
+        }).filter(s -> !s.isBlank()).toList();
 
     }
 
@@ -74,42 +75,91 @@ public class Utils {
      * @return
      */
     public Map<String, List<String>> getErrorMessages(Errors errors) {
-        // 메시지 소스(MessageSource)를 ResourceBundleMessageSource로 캐스팅
-        // 메시지 처리를 담당
         ResourceBundleMessageSource ms = (ResourceBundleMessageSource) messageSource;
-        // 메시지 코드를 기본 메시지로 사용하는 설정을 비활성화
-        // 코드가 메시지로 사용되는 것을 방지하고, 실제 메시지를 찾도록 설정
         ms.setUseCodeAsDefaultMessage(false);
-
         try {
-            // 필드별 에러 메시지를 수집하여 Map으로 저장
+            // 필드별 에러코드 - getFieldErrors()
+            // Collectors.toMap
             Map<String, List<String>> messages = errors.getFieldErrors()
-                    .stream() // 필드 에러 리스트를 스트림으로 변환
-                    .collect(Collectors.toMap(
-                            FieldError::getField,// Key: 필드 이름
-                            f -> getMessages(f.getCodes()), // Value: 필드와 연관된 에러 메시지 리스트
-                            (v1, v2) -> v2// Key 충돌 시, 기존 값(v1)을 대체할 값(v2)을 사용
-                    ));
+                    .stream()
+                    .collect(Collectors.toMap(FieldError::getField, f -> getMessages(f.getCodes()), (v1, v2) -> v2));
 
-            // 글로벌 에러 메시지(Global Error)를 수집하여 리스트로 저장
+            // 글로벌 에러코드 - getGlobalErrors()
             List<String> gMessages = errors.getGlobalErrors()
-                    .stream() // 글로벌 에러 리스트를 스트림으로 변환
-                    .flatMap(o -> getMessages(o.getCodes()).stream()) // 각 글로벌 에러의 코드로 메시지를 가져옴
-                    .toList(); // 결과를 List로 변환
-
-            // 글로벌 에러 메시지가 존재하는 경우
+                    .stream()
+                    .flatMap(o -> getMessages(o.getCodes()).stream())
+                    .toList();
+            // 글로벌 에러코드 필드 - global
             if (!gMessages.isEmpty()) {
-                // "global" 키로 글로벌 에러 메시지 리스트를 Map에 추가
                 messages.put("global", gMessages);
             }
 
-            // 최종적으로 구성된 메시지 Map 반환
             return messages;
         } finally {
-            // finally 사용한 이유: finally 무조권 실행 되므로 마지막에 원상태로 복원하기 위해서 사용함
-            // 메시지 소스의 기본 설정 복원
-            // 싱글톤 객체이므로 설정 변경이 다른 코드에 영향을 미치지 않도록 복원
             ms.setUseCodeAsDefaultMessage(true);
         }
+    }
+
+    /**
+     * 이미지 출력
+     *
+     * @param width
+     * @param height
+     * @param mode - image : 이미지 태그로 출력, background : 배경 이미지 형태 출력
+     * @return
+     */
+    public String showImage(Long seq, int width, int height, String mode, String className) {
+        return showImage(seq, null, width, height, mode, className);
+    }
+
+    public String showImage(Long seq, int width, int height, String className) {
+        return showImage(seq, null, width, height, "image", className);
+    }
+
+    public String showBackground(Long seq, int width, int height, String className) {
+        return showImage(seq, null, width, height, "background", className);
+    }
+
+    public String showImage(String url, int width, int height, String mode, String className) {
+        return showImage(null, url, width, height, mode, className);
+    }
+
+    public String showImage(String url, int width, int height, String className) {
+        return showImage(null, url, width, height, "image", className);
+    }
+
+    public String showBackground(String url, int width, int height, String className) {
+        return showImage(null, url, width, height, "background", className);
+    }
+
+    public String showImage(Long seq, String url, int width, int height, String mode, String className) {
+
+        try {
+            String imageUrl = null;
+            if (seq != null && seq > 0L) {
+                FileInfo item = fileInfoService.get(seq);
+                if (!item.isImage()) {
+                    return "";
+                }
+
+                imageUrl = String.format("%s&width=%d&height=%d", item.getThumbUrl(), width, height);
+
+            } else if (StringUtils.hasText(url)) {
+                imageUrl = String.format("%s/api/file/thumb?url=%s&width=%d&height=%d", request.getContextPath(), url, width, height);
+            }
+
+            if (!StringUtils.hasText(imageUrl)) return "";
+
+            mode = Objects.requireNonNullElse(mode, "image");
+            className = Objects.requireNonNullElse(className, "image");
+            if (mode.equals("background")) { // 배경 이미지
+
+                return String.format("<div style='width: %dpx; height: %dpx; background:url(\"%s\") no-repeat center center; background-size:cover;' class='%s'></div>", width, height, imageUrl, className);
+            } else { // 이미지 태그
+                return String.format("<img src='%s' class='%s'>", imageUrl, className);
+            }
+        } catch (Exception e) {}
+
+        return "";
     }
 }

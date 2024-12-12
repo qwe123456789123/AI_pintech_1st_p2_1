@@ -3,16 +3,18 @@ package org.koreait.member.entities;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.ToString;
+import org.koreait.file.entities.FileInfo;
 import org.koreait.global.entities.BaseEntity;
 import org.koreait.member.constants.Gender;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
 @Entity
-public class Member extends BaseEntity {
+public class Member extends BaseEntity implements Serializable {
     @Id @GeneratedValue
     private Long seq; // 회원 번호
 
@@ -59,4 +61,7 @@ public class Member extends BaseEntity {
 
     // 비밀번호 변경 일시
     private LocalDateTime credentialChangedAt;
+
+    @Transient
+    private FileInfo profileImage;
 }

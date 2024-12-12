@@ -12,6 +12,9 @@ public class ApiTest2 {
 
     @Test
     void updateTest1() {
-        service.update(1);
+        service.update(1); // 숫자 1게 증가 할때마다 100게식 가져옴
+        service.update(2);
+        service.update(3);
+        service.update(4);
     }
 }
