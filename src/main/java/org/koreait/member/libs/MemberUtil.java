@@ -41,7 +41,6 @@ public class MemberUtil {
         if (auth != null && auth.isAuthenticated() && auth.getPrincipal() instanceof MemberInfo memberInfo) {
             return member == null ? memberInfo.getMember() : member;
         }
-
         return null;
     }
 }
