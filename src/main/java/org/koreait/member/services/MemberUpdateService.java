@@ -99,10 +99,10 @@ public class MemberUpdateService {
         List<Authorities> _authorities = null;
         if (authorities != null && memberUtil.isAdmin()) {
             _authorities = authorities.stream().map(a -> {
-                Authorities auth = new Authorities();
-                auth.setAuthority(a);
-                auth.setMember(member);
-                return auth;
+               Authorities auth = new Authorities();
+               auth.setAuthority(a);
+               auth.setMember(member);
+               return auth;
             }).toList();
         }
 
@@ -127,8 +127,8 @@ public class MemberUpdateService {
             QAuthorities qAuthorities = QAuthorities.authorities;
             List<Authorities> items = (List<Authorities>) authoritiesRepository.findAll(qAuthorities.member.eq(member));
             if (items != null) {
-                authoritiesRepository.deleteAll(items);
-                authoritiesRepository.flush();
+               authoritiesRepository.deleteAll(items);
+               authoritiesRepository.flush();
             }
 
 
@@ -138,7 +138,10 @@ public class MemberUpdateService {
         // 회원 권한 업데이트 처리 E
 
         // 로그인 회원 정보 업데이트
-        infoService.addInfo(member);
-        memberUtil.setMember(member);
+        member = memberRepository.findByEmail(member.getEmail()).orElse(null);
+        if (member != null) {
+            infoService.addInfo(member);
+            memberUtil.setMember(member);
+        }
     }
 }

@@ -13,7 +13,7 @@ public class I18NConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(localeChangeInterceptor());
-                // .addPathPatterns("/**") - 사이트 전역에 적용하는 패턴일 경우 생략 가능
+                //.addPathPatterns("/**") - 사이트 전역에 적용하는 패턴일 경우 생략 가능
     }
 
     @Bean
@@ -27,7 +27,7 @@ public class I18NConfig implements WebMvcConfigurer {
     @Bean
     public CookieLocaleResolver localeResolver() {
         CookieLocaleResolver resolver = new CookieLocaleResolver();
-        resolver.setCookieMaxAge(60*60);
+        resolver.setCookieMaxAge(60 * 60);
         resolver.setCookieName("language");
 
         return resolver;

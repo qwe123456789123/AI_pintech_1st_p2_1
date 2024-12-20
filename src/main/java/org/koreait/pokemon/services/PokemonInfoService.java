@@ -66,6 +66,7 @@ public class PokemonInfoService {
         if (seq != null && !seq.isEmpty()) {
             andBuilder.and(pokemon.seq.in(seq));
         }
+
         /* 검색 처리 E */
 
         Pageable pageable = PageRequest.of(page - 1, limit, Sort.by(asc("seq")));
@@ -82,11 +83,13 @@ public class PokemonInfoService {
         return new ListData<>(items, pagination);
     }
 
-    public ListData<Pokemon> getMyPokemons(PokemonSearch search){
+    // 내가 찜한 포켓몬 목록
+    public ListData<Pokemon> getMyPokemons(PokemonSearch search) {
         List<Long> seq = wishService.getMyWish(WishType.POKEMON);
         if (seq == null || seq.isEmpty()) {
             return new ListData<>();
         }
+
         search.setSeq(seq);
 
         return getList(search);
@@ -165,7 +168,7 @@ public class PokemonInfoService {
         QPokemon pokemon = QPokemon.pokemon;
 
         return queryFactory.select(pokemon.seq.max())
-                .from(pokemon)
-                .fetchFirst();
+                    .from(pokemon)
+                    .fetchFirst();
     }
 }

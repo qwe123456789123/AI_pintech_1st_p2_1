@@ -14,7 +14,6 @@ public class SwaggerConfig {
         return GroupedOpenApi.builder()
                 .group("포켓몬 도감 API")
                 .pathsToMatch("/api/**")
-                // api 가 붙어 있는 것들은 자동으로 문서화 하기 위해서
                 .build();
     }
 }

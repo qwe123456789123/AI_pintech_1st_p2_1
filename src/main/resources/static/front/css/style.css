@@ -147,7 +147,7 @@ header .icon.search {
 
 header > .right {
     display: flex;
-    width: 530px;
+    width: 520px;
     justify-content: flex-end;
 }
 
@@ -195,6 +195,7 @@ header .move-to-store::after {
     text-align: center;
     margin: 20px 0;
 }
+
 .pagination a {
     display: inline-block;
     min-width: 45px;

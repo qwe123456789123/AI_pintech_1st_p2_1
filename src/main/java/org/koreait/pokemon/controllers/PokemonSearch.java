@@ -8,5 +8,4 @@ import java.util.List;
 @Data
 public class PokemonSearch extends CommonSearch {
     private List<Long> seq;
-
 }

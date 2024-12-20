@@ -9,7 +9,7 @@ import java.io.Serializable;
 @Data
 @Entity
 @IdClass(AuthoritiesId.class)
-public class Authorities implements Serializable  {
+public class Authorities implements Serializable {
     @Id
     @ManyToOne(fetch = FetchType.LAZY)
     private Member member;

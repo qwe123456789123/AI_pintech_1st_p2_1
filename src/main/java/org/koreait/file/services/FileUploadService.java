@@ -26,7 +26,6 @@ public class FileUploadService {
     private final FileInfoRepository fileInfoRepository;
     private final FileInfoService infoService;
 
-
     public List<FileInfo> upload(RequestUpload form) {
         String gid = form.getGid();
         gid = StringUtils.hasText(gid) ? gid : UUID.randomUUID().toString();
@@ -37,16 +36,16 @@ public class FileUploadService {
         String rootPath = properties.getPath();
 
 
-
         // 파일 업로드 성공 파일 정보
         List<FileInfo> uploadedItems = new ArrayList<>();
 
         for (MultipartFile file : files) {
             String contentType = file.getContentType();
-            // 이미지 형식의 파일만 허용하는 경우 - 이미지가 아닌 파일은 건너뛰기
-            if (form.isImageOnly() && contentType.indexOf("image/")== -1){
+            // 이미지 형식의 파일만 허용하는 경우 - 이미지가 아닌 파일은 건너띄기
+            if (form.isImageOnly() && contentType.indexOf("image/") == -1) {
                 continue;
             }
+
             // 1. 파일 업로드 정보 - DB에 기록 S
             // 파일명.확장자 // model.weights.h5
             String fileName = file.getOriginalFilename();
@@ -57,8 +56,7 @@ public class FileUploadService {
             item.setLocation(location);
             item.setFileName(fileName);
             item.setExtension(extension);
-            item.setContentType(file.getContentType());
-
+            item.setContentType(contentType);
 
             fileInfoRepository.saveAndFlush(item);
 
@@ -90,6 +88,7 @@ public class FileUploadService {
             }
             // 2. 파일 업로드 처리 E
         }
+
 
         return uploadedItems;
     }

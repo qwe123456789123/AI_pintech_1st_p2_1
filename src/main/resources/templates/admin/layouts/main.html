@@ -11,6 +11,7 @@
 
         <title th:if="${pageTitle != null}" th:text="${pageTitle}"></title>
 
+        <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/xeicon@2.3.3/xeicon.min.css">
         <link rel="stylesheet" type="text/css" th:href="@{/common/css/style.css}">
 
         <th:block th:if="${addCommonCss != null}">
@@ -43,8 +44,12 @@
     <body>
         <header th:replace="~{admin/outlines/_header::common}"></header>
 
-        <main layout:fragment="content"></main>
-
-        <footer th:replace="~{admin/outlines/_footer::common}"></footer>
+        <main>
+            <aside th:replace="~{admin/outlines/_menu::main}"></aside>
+            <section>
+                <nav th:replace="~{admin/outlines/_submenu::sub}"></nav>
+                <div layout:fragment="content" class="main-content"></div>
+            </section>
+        </main>
     </body>
 </html>

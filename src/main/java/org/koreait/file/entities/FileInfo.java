@@ -38,6 +38,7 @@ public class FileInfo extends BaseMemberEntity implements Serializable {
     @Transient
     private String filePath; // 파일이 서버에 있는 경로
 
+    @Transient
     private String thumbUrl; // 썸네일 기본 URL
 
     private boolean done; // 파일과 연관된 작업이 완료되었는지 여부
@@ -45,6 +46,6 @@ public class FileInfo extends BaseMemberEntity implements Serializable {
     // 이미지 형식 여부
     public boolean isImage() {
 
-        return StringUtils.hasText(contentType)&& contentType.contains("image/");
+        return StringUtils.hasText(contentType) && contentType.contains("image/");
     }
 }

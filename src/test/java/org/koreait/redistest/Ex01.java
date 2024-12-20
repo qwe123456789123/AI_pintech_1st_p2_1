@@ -1,17 +1,17 @@
 package org.koreait.redistest;
 
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.koreait.dl.entities.RedisItem;
-import org.koreait.dl.repositories.RedisItemRepository;
+import org.koreait.file.entities.RedisItem;
+import org.koreait.file.repositories.RedisItemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest
-@ActiveProfiles({"default","test"})
+@ActiveProfiles({"default", "test"})
 public class Ex01 {
+
     @Autowired
     private RedisItemRepository repository;
 
@@ -20,8 +20,7 @@ public class Ex01 {
         RedisItem redisItem = new RedisItem();
         redisItem.setKey("testkey");
         redisItem.setPrice(1000);
-        redisItem.setProductNm("테스트 명");
-
+        redisItem.setProductNm("테스트 상품명");
 
         repository.save(redisItem);
     }

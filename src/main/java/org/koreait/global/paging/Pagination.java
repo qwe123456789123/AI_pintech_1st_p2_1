@@ -74,7 +74,7 @@ public class Pagination {
         baseUrl = "?";
         if (StringUtils.hasText(qs)) {
             baseUrl += Arrays.stream(qs.split("&"))
-                    .filter(s -> !s.contains("page="))
+                        .filter(s -> !s.contains("page="))
                     .collect(Collectors.joining("&")) + "&";
         }
         baseUrl += "page=";

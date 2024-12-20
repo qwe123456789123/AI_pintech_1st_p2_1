@@ -7,7 +7,7 @@ import java.io.Serializable;
 import java.util.List;
 
 @Data
-public class RequestLogin implements Serializable  {
+public class RequestLogin implements Serializable {
 
     @NotBlank
     private String email;
