@@ -16,7 +16,7 @@ public class CodeValueServiceTest {
     @Test
     void saveTest() {
         SiteConfig item = new SiteConfig();
-        item.setSiteTile("제목");
+        item.setSiteTitle("제목");
         item.setDescription("설명");
         item.setKeywords("키워드1,키워드2");
 

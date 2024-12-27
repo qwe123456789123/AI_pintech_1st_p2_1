@@ -178,4 +178,22 @@ public class Utils {
         HttpSession session = request.getSession();
         session.removeAttribute("showMessage");
     }
+    public String getParam(String name){
+        return request.getParameter(name);
+    }
+
+    private String[] getParams(String name){
+        return request.getParameterValues(name);
+    }
+
+    /**
+     * 줄갱행 문자(\n 또는 \r\n)를 br 태그로 변환
+     *
+     * @param text
+     * @return
+     */
+    public String nl2br(String text) {
+        return text.replaceAll("\\r","")
+                .replaceAll("\\n","<br>");
+    }
 }

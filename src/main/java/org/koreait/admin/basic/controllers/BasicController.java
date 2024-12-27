@@ -1,9 +1,11 @@
 package org.koreait.admin.basic.controllers;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.koreait.admin.global.menu.MenuDetail;
-import org.koreait.admin.global.menu.Menus;
+import org.koreait.admin.basic.services.TermsInfoService;
+import org.koreait.admin.basic.services.TermsUpdateService;
+import org.koreait.admin.global.menu.SubMenus;
 import org.koreait.global.annotations.ApplyErrorPage;
 import org.koreait.global.entities.SiteConfig;
 import org.koreait.global.entities.Terms;
@@ -22,19 +24,18 @@ import java.util.Objects;
 @ApplyErrorPage
 @RequiredArgsConstructor
 @RequestMapping("/admin/basic")
-public class BasicController {
+public class BasicController implements SubMenus {
 
     private final CodeValueService codeValueService;
+    private final TermsUpdateService termsUpdateService;
+    private final TermsInfoService termsInfoService;
+    private final HttpServletRequest request;
+
     private final Utils utils;
 
     @ModelAttribute("menuCode")
     public String menuCode() {
         return "basic";
-    }
-
-    @ModelAttribute("submenus")
-    public List<MenuDetail> submenus() {
-        return Menus.getMenus(menuCode());
     }
 
     /**
@@ -77,6 +78,9 @@ public class BasicController {
     public String terms(@ModelAttribute Terms form, Model model) {
         commonProcess("terms", model);
 
+        List<Terms> items = termsInfoService.getList();
+        model.addAttribute("items", items);
+
         return "admin/basic/terms";
     }
 
@@ -89,7 +93,25 @@ public class BasicController {
             return "admin/basic/terms";
         }
 
-        return "admin/basic/terms"; // 임시
+        termsUpdateService.save(form);
+
+        model.addAttribute("script", "parent.location.reload();");
+
+        return "common/_execute_script";
+    }
+
+    @RequestMapping(path="/terms", method={RequestMethod.PATCH, RequestMethod.DELETE})
+    public String updateTerms(@RequestParam(name="chk", required = false) List<Integer> chks, Model model) {
+
+        termsUpdateService.processList(chks);
+
+
+        String message = request.getMethod().equalsIgnoreCase("DELETE") ? "삭제" : "수정";
+        message += "하였습니다.";
+        utils.showSessionMessage(message);
+
+        model.addAttribute("script", "parent.location.reload();");
+        return "common/_execute_script";
     }
 
     /**
