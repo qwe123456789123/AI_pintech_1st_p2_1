@@ -30,7 +30,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @SessionAttributes({"requestAgree", "requestLogin", "authCodeVerified"})
 public class MemberController {
-
+    
     private final Utils utils;
     private final MemberUtil memberUtil;
     private final JoinValidator joinValidator; // 회원 가입 검증
@@ -46,13 +46,13 @@ public class MemberController {
     public RequestLogin requestLogin() {
         return new RequestLogin();
     }
-
+    
     // 이메일 인증 여부
     @ModelAttribute("authCodeVerified")
     public boolean authCodeVerified() {
         return false;
     }
-
+    
     /* 회원 페이지 CSS */
     @ModelAttribute("addCss")
     public List<String> addCss() {
@@ -154,7 +154,7 @@ public class MemberController {
 
     /**
      * 공통 처리 부분
-     *
+     * 
      * @param mode
      * @param model
      */

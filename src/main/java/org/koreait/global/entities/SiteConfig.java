@@ -1,6 +1,5 @@
 package org.koreait.global.entities;
 
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 

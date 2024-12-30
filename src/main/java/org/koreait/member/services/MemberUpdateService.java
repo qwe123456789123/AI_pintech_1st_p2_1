@@ -15,6 +15,7 @@ import org.koreait.member.repositories.MemberRepository;
 import org.koreait.mypage.controllers.RequestProfile;
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -76,7 +77,9 @@ public class MemberUpdateService {
     }
 
     public void process(RequestProfile form, List<Authority> authorities) {
-        Member member = memberUtil.getMember(); // 로그인한 사용자의 정보
+        String email = form.getEmail();
+        Member member = memberUtil.isAdmin() && StringUtils.hasText(email) ? memberRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException(email)) : memberUtil.getMember(); // 로그인한 사용자의 정보
+
         member.setName(form.getName());
         member.setNickName(form.getNickName());
         member.setBirthDt(form.getBirthDt());
@@ -105,20 +108,22 @@ public class MemberUpdateService {
         List<Authorities> _authorities = null;
         if (authorities != null && memberUtil.isAdmin()) {
             _authorities = authorities.stream().map(a -> {
-                Authorities auth = new Authorities();
-                auth.setAuthority(a);
-                auth.setMember(member);
-                return auth;
+               Authorities auth = new Authorities();
+               auth.setAuthority(a);
+               auth.setMember(member);
+               return auth;
             }).toList();
         }
 
         save(member, _authorities);
 
         // 로그인 회원 정보 업데이트
-        Member _member = memberRepository.findByEmail(member.getEmail()).orElse(null);
-        if (_member != null) {
-            infoService.addInfo(_member);
-            session.setAttribute("member", _member);
+        if (!StringUtils.hasText(email)) {
+            Member _member = memberRepository.findByEmail(member.getEmail()).orElse(null);
+            if (_member != null) {
+                infoService.addInfo(_member);
+                session.setAttribute("member", _member);
+            }
         }
     }
 
@@ -140,8 +145,8 @@ public class MemberUpdateService {
             QAuthorities qAuthorities = QAuthorities.authorities;
             List<Authorities> items = (List<Authorities>) authoritiesRepository.findAll(qAuthorities.member.eq(member));
             if (items != null) {
-                authoritiesRepository.deleteAll(items);
-                authoritiesRepository.flush();
+               authoritiesRepository.deleteAll(items);
+               authoritiesRepository.flush();
             }
 
 
@@ -149,32 +154,36 @@ public class MemberUpdateService {
         }
 
         // 회원 권한 업데이트 처리 E
-
-
-        /**
-         * 회원 목록 수정 처리
-         */
     }
-    public void updateList(List<Integer> chks){
-        if(chks == null || chks.isEmpty()){
-            throw new AlertException("수정할 회원을 선택하세요");
+
+    /**
+     * 회원 목록 수정 처리
+     *
+     * @param chks
+     */
+    public void updateList(List<Integer> chks) {
+        if (chks == null || chks.isEmpty()) {
+            throw new AlertException("수정할 회원을 선택하세요.");
         }
 
         List<Member> members = new ArrayList<>();
-        for (int chk: chks) {
+        for (int chk : chks) {
             Long seq = Long.valueOf(utils.getParam("seq_" + chk));
-            Member member= memberRepository.findById(seq).orElse(null);
-        if (member == null) continue;
+            Member member = memberRepository.findById(seq).orElse(null);
+            if (member == null) continue;
 
-        // 비밀번호 변경일시 업데이트
-        if (utils.getParam("updateCredentialChangedAt_" + chk)!= null){
-            member.setCredentialChangedAt(LocalDateTime.now());
-        }
-        String deletedAt = utils.getParam("deletedAt_"+chk);
-        if ( deletedAt != null) {
-            member.setDeletedAt(deletedAt.equals("CANCEL") ? null : LocalDateTime.now());
-        }
-        members.add(member);
+            // 비밀번호 변경일시 업데이트
+            if (utils.getParam("updateCredentialChangedAt_" + chk) != null) {
+                member.setCredentialChangedAt(LocalDateTime.now());
+            }
+
+            // 탈퇴 취소 또는 탈퇴 처리
+            String deletedAt = utils.getParam("deletedAt_" + chk);
+            if (deletedAt != null) {
+                member.setDeletedAt(deletedAt.equals("CANCEL") ? null : LocalDateTime.now());
+            }
+
+            members.add(member);
         }
 
         memberRepository.saveAllAndFlush(members);
