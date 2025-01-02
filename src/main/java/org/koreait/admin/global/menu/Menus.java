@@ -28,7 +28,13 @@ public class Menus {
            new MenuDetail("add", "게시판등록", "/admin/board/add"),
            new MenuDetail("posts", "게시글관리", "/admin/board/posts")
         ));
-
+        // 상품관리
+        submenus.put("product", List.of(
+                new MenuDetail("list", "상품목록","/admin/product/list"),
+                new MenuDetail("add","상품등록","/admin/product/add"),
+                new MenuDetail("category", "분류관리","admin/product/category"),
+                new MenuDetail("delivery","배속정책관리","/admin/category/delivery")
+        ));
     }
 
     public static List<MenuDetail> getMenus(String menuCode) {
