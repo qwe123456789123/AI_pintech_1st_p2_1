@@ -1,11 +1,17 @@
 package org.koreait.message.controllers;
 
-import ch.qos.logback.core.util.StringUtil;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import lombok.Value;
+import org.eclipse.jdt.internal.compiler.ast.MessageSend;
+import org.koreait.file.constants.FileStatus;
+import org.koreait.file.services.FileInfoService;
 import org.koreait.global.annotations.ApplyErrorPage;
 import org.koreait.global.libs.Utils;
+import org.koreait.global.paging.ListData;
+import org.koreait.message.entities.Message;
+import org.koreait.message.services.MessageInfoService;
+import org.koreait.message.services.MessageSendService;
+import org.koreait.message.services.MessageStatusService;
 import org.koreait.message.validators.MessageValidator;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -25,10 +31,16 @@ public class MessageController {
 
     private final Utils utils;
     private final MessageValidator messageValidator;
+    private final FileInfoService fileInfoService;
+    private final MessageSendService sendService;
+    private final MessageInfoService infoService;
+    private final MessageStatusService statusService;
 
+    @ModelAttribute("addCss")
     public List<String> addCss() {
         return List.of("message/style");
     }
+
     /**
      * 쪽지 작성 양식
      *
@@ -37,7 +49,9 @@ public class MessageController {
     @GetMapping
     public String form(@ModelAttribute RequestMessage form, Model model) {
         commonProcess("send", model);
+
         form.setGid(UUID.randomUUID().toString());
+
         return utils.tpl("message/form");
     }
 
@@ -53,8 +67,15 @@ public class MessageController {
         messageValidator.validate(form, errors);
 
         if (errors.hasErrors()) {
+            // 업로드한 파일 목록 form에 추가
+            String gid = form.getGid();
+            form.setEditorImages(fileInfoService.getList(gid, "editor", FileStatus.ALL));
+            form.setAttachFiles(fileInfoService.getList(gid, "attach", FileStatus.ALL));
+
             return utils.tpl("message/form");
         }
+
+        sendService.process(form);
 
         return "redirect:/message/list";
     }
@@ -65,13 +86,26 @@ public class MessageController {
      * @return
      */
     @GetMapping("/list")
-    public String list(Model model) {
+    public String list(@ModelAttribute MessageSearch search, Model model) {
+        commonProcess("list", model);
+        String mode = search.getMode();
+        search.setMode(StringUtils.hasText(mode) ? mode : "receive");
+
+        ListData<Message> data = infoService.getList(search);
+        model.addAttribute("items", data.getItems());
+        model.addAttribute("pagination", data.getPagination());
 
         return utils.tpl("message/list");
     }
 
     @GetMapping("/view/{seq}")
     public String view(@PathVariable("seq") Long seq, Model model) {
+        commonProcess("view", model);
+
+        Message item = infoService.get(seq);
+        model.addAttribute("item",item);
+
+        statusService.change(seq); // 열람 상태로 변경
 
         return utils.tpl("message/view");
     }
@@ -83,17 +117,18 @@ public class MessageController {
     }
 
     /**
-     * 컨트롤러 공통 처리 부분
+     * 컨트롤러 공통 처리
+     *
      * @param mode
      * @param model
      */
     private void commonProcess(String mode, Model model) {
-        mode = StringUtils.hasText(mode) ? mode : "lsit";
+        mode = StringUtils.hasText(mode) ? mode : "list";
         String pageTitle = "";
         List<String> addCommonScript = new ArrayList<>();
         List<String> addScript = new ArrayList<>();
 
-        if (mode.equals("send")){ // 쪽지 보내기
+        if (mode.equals("send")) { // 쪽지 보내기
             pageTitle = utils.getMessage("쪽지_보내기");
             addCommonScript.add("fileManager");
             addCommonScript.add("ckeditor5/ckeditor");

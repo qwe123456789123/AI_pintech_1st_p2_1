@@ -1,7 +1,10 @@
 package org.koreait.message.entities;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.koreait.file.entities.FileInfo;
 import org.koreait.global.entities.BaseEntity;
 import org.koreait.member.entities.Member;
@@ -11,6 +14,8 @@ import java.util.List;
 
 @Data
 @Entity
+@Builder
+@NoArgsConstructor @AllArgsConstructor
 public class Message extends BaseEntity {
     @Id @GeneratedValue
     private Long seq;
@@ -44,4 +49,12 @@ public class Message extends BaseEntity {
 
     @Transient
     private List<FileInfo> attachFiles;
+
+    @Transient
+    private boolean received;
+
+    @Transient
+    private boolean deletedBySender; // 보내는 쪽에서 쪽지를 삭제한 경우
+    @Transient
+    private boolean deletedByReceiver; // 받는 쪽에서 쪽지를 삭제한 경우
 }
