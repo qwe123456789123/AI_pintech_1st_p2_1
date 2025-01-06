@@ -60,7 +60,7 @@ public class MessageInfoServiceTest {
     void createMessages() {
         for (int i = 0; i < 10; i++){
             RequestMessage message = new RequestMessage();
-            message.setEditorImages("user02@test.org");
+            // message.setEditorImages("user0@test.org");
         }
     }
 }
