@@ -79,8 +79,7 @@ public class MessageController {
         }
 
         Message message = sendService.process(form);
-        long totalUnRead = infoService.totalUnRead();
-
+        long totalUnRead = infoService.totalUnRead(form.getEmail());
         Map<String, Object> data = new HashMap<>();
         data.put("item", message);
         data.put("totalUnRead", totalUnRead);
@@ -96,8 +95,6 @@ public class MessageController {
         }
 
         sb.append(String.format("location.replace('%s');",request.getContextPath() + "/message/list"));
-
-        System.out.println(sb);
 
         model.addAttribute("script", sb.toString());
 
