@@ -80,7 +80,7 @@ window.addEventListener("DOMContentLoaded", function() {
             if (!fileEl) {
                 fileEl = document.createElement("input");
                 fileEl.type = 'file';
-            }else{
+            } else {
                 fileEl.value = ''; // 초기화
             }
 

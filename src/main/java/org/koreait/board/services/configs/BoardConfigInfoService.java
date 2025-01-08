@@ -6,9 +6,9 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.koreait.admin.board.controllers.BoardConfigSearch;
 import org.koreait.admin.board.controllers.RequestBoard;
-import org.koreait.board.exception.BoardNotFoundException;
 import org.koreait.board.entities.Board;
 import org.koreait.board.entities.QBoard;
+import org.koreait.board.exceptions.BoardNotFoundException;
 import org.koreait.board.repositories.BoardRepository;
 import org.koreait.global.paging.ListData;
 import org.koreait.global.paging.Pagination;
@@ -60,7 +60,7 @@ public class BoardConfigInfoService {
 
     /**
      * 게시판 설정 목록
-     *
+     * 
      * @param search
      * @return
      */
@@ -78,18 +78,18 @@ public class BoardConfigInfoService {
         sopt = StringUtils.hasText(sopt) ? sopt : "ALL";
         if (StringUtils.hasText(skey)) {
             StringExpression condition;
-            if (sopt.equals("BID")){ // 게시판 아이디로 검색
+            if (sopt.equals("BID")) { // 게시판 아이디
                 condition = board.bid;
-            } else if (sopt.equals("NAME")){ // 게시판 명
+            } else if (sopt.equals("NAME")) { // 게시판명
                 condition = board.name;
-            } else { // 통합검색 - 게시판 아이디 + 게시판명
+            } else { // 통합 검색 - 게시판 아이디 + 게시판명
                 condition = board.bid.concat(board.name);
             }
 
             andBuilder.and(condition.contains(skey.trim()));
         }
 
-        List<String> bids = search.getBid(); // 존재하면 검색 조건에 추가
+        List<String> bids = search.getBid();
         if (bids != null && !bids.isEmpty()) {
             andBuilder.and(board.bid.in(bids));
         }
@@ -105,7 +105,8 @@ public class BoardConfigInfoService {
 
         return new ListData<>(items, pagination);
     }
-    // 추가 정보 처리
+
+    // 추가 정보처리
     private void addInfo(Board item) {
         String category = item.getCategory();
         if (StringUtils.hasText(category)) {
@@ -114,6 +115,7 @@ public class BoardConfigInfoService {
                     .filter(s -> !s.isBlank())
                     .map(String::trim)
                     .toList();
+
             item.setCategories(categories);
         }
     }

@@ -6,26 +6,26 @@ window.addEventListener("DOMContentLoaded", function() {
             window.editor = editor; // 전역 변수로 등록, then 구간 외부에서도 접근 가능하게 처리
         });
 
-        // 이미지 본문 추가 이벤트 처리
-        const insertEditors = document.querySelectorAll(".insert-editor")
-        insertEditors.forEach(el => {
-            el.addEventListener("click", e => insertImage(e.currentTarget.dataset.url));
-        });
+    // 이미지 본문 추가 이벤트 처리
+    const insertEditors = document.querySelectorAll(".insert-editor")
+    insertEditors.forEach(el => {
+        el.addEventListener("click", e => commonLib.insertEditorImage(e.currentTarget.dataset.url));
+    });
 
-        // 파일 삭제 이벤트 처리
-        const removeEls = document.querySelectorAll(".file-item .remove");
-        const { fileManager } = commonLib;
-        removeEls.forEach(el => {
-            el.addEventListener("clock", e => {
-                if  (confirm('정말 삭제하겠습니까?')){
-                    const seq = e.currentTarget.dataset.seq;
-                    fileManager.delete(seq, () => {
-                        const el = document.getElementById(`file-${seq}`);
-                        el.parentElement.removeChild(el);
-                    });
-                }
-            });
+    // 파일 삭제 버튼 이벤트 처리
+    const removeEls = document.querySelectorAll(".file-item .remove");
+    const { fileManager } = commonLib;
+    removeEls.forEach(el => {
+        el.addEventListener("click", e => {
+            if (confirm('정말 삭제하겠습니까?')) {
+                const seq = e.currentTarget.dataset.seq;
+                fileManager.delete(seq, () => {
+                    const el = document.getElementById(`file-${seq}`);
+                    el.parentElement.removeChild(el);
+                });
+            }
         });
+    });
 });
 
 
@@ -65,7 +65,7 @@ function callbackFileUpload(files) {
             targetEditor.append(fileItem);
             el.addEventListener("click", function() {
                 const { url } = this.dataset;
-                insertImage(url);
+                commonLib.insertEditorImage(url);
             });
 
         } else { // 다운로드를 위한 첨부 파일
@@ -86,11 +86,6 @@ function callbackFileUpload(files) {
         });
     }
 
-    if (imageUrls.length > 0) insertImage(imageUrls);
+    if (imageUrls.length > 0) commonLib.insertEditorImage(imageUrls);
 }
 
-function insertImage(imageUrls) {
-    imageUrls = typeof imageUrls === 'string' ? [imageUrls] : imageUrls;
-
-    editor.execute('insertImage', { source: imageUrls });
-}

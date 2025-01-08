@@ -1,4 +1,3 @@
-
 package org.koreait.file.services;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -57,15 +56,15 @@ public class FileUploadServiceTest {
 
         assertDoesNotThrow(() -> service.upload(form));
     }
-
+    
     @Test
     @DisplayName("파일 업로드 통합 테스트")
     @MockMember
     void uploadControllerTest() throws Exception {
         String body = mockMvc.perform(multipart("/api/file/upload")
-                        .file(files[0])
-                        .file(files[1])
-                        .param("gid", UUID.randomUUID().toString())
+                .file(files[0])
+                .file(files[1])
+                .param("gid", UUID.randomUUID().toString())
                         .with(csrf().asHeader()))
                 .andDo(print())
                 .andExpect(status().isCreated())

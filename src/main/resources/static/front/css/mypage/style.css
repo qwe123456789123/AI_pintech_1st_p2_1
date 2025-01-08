@@ -19,7 +19,8 @@ main > aside > a {
     height: 45px;
     line-height: 44px;
 }
-main > aside > a + a{
+
+main > aside > a + a {
     border-top: 1px solid #ccc;
 }
 

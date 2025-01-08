@@ -1,5 +1,6 @@
 package org.koreait.file.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.koreait.global.entities.BaseMemberEntity;
@@ -10,9 +11,10 @@ import java.io.Serializable;
 @Data
 @Entity
 @Table(indexes = {
-        @Index(name="idx_gid", columnList = "gid, listOrder,createdAt"),
+        @Index(name="idx_gid", columnList = "gid, listOrder, createdAt"),
         @Index(name="idx_gid_location", columnList = "gid, location, listOrder, createdAt")
 })
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class FileInfo extends BaseMemberEntity implements Serializable {
     @Id @GeneratedValue
     private Long seq; // 파일 등록 번호

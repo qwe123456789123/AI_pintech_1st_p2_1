@@ -14,10 +14,10 @@ import static org.junit.jupiter.api.Assertions.*;
 @ActiveProfiles({"default", "test"})
 @DisplayName("파일 정보 조회 기능 테스트")
 public class FileInfoServiceTest {
-
+    
     @Autowired
     private FileInfoService infoService;
-
+    
     @Test
     @DisplayName("없는 파일 번호로 조회시에 FileNotFoundException 발생하는지 테스트")
     void notExistsFileInfoTest() {

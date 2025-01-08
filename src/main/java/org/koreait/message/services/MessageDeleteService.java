@@ -44,7 +44,7 @@ public class MessageDeleteService {
             }
         } // endif
 
-        if (mode.equals("send")) { // 보낸 쪽
+        if (mode.equals("send")) { // 보낸 쪽 
             item.setDeletedBySender(true);
         } else { // 받는 쪽
             item.setDeletedByReceiver(true);

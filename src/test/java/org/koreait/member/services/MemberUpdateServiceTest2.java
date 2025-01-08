@@ -39,14 +39,14 @@ public class MemberUpdateServiceTest2 {
     void init() {
         RequestJoin form = new RequestJoin();
         form.setEmail("user01@test.org");
-        form.setName("휴먼");
+        form.setName("이이름");
         form.setNickName("닉네임");
         form.setZipCode("0000");
         form.setAddress("주소");
         form.setAddressSub("나머지 주소");
         form.setGender(Gender.MALE);
         form.setBirthDt(LocalDate.now());
-        form.setPassword("_Aa123456");
+        form.setPassword("_aA123456");
         form.setConfirmPassword(form.getPassword());
 
         service.process(form);
@@ -57,9 +57,9 @@ public class MemberUpdateServiceTest2 {
 
     @Test
     @DisplayName("회원정보 수정 성공시 예외가 발생하지 않는 테스트")
-    @WithUserDetails(value ="user01@test.org", setupBefore = TestExecutionEvent.TEST_EXECUTION)
+    @WithUserDetails(value="user01@test.org", setupBefore = TestExecutionEvent.TEST_EXECUTION)
     void updateSuccessTest() {
-        profile.setName("(수정)휴먼");
+        profile.setName("(수정)이이름");
         assertDoesNotThrow(() -> {
             service.process(profile);
         });
