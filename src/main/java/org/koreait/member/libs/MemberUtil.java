@@ -37,6 +37,7 @@ public class MemberUtil {
      */
     public Member getMember() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
         if (auth != null && auth.isAuthenticated() && auth.getPrincipal() instanceof MemberInfo memberInfo) {
             Member member = (Member)session.getAttribute("member");
             if (member == null) {
