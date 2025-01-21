@@ -5,6 +5,9 @@ import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.koreait.file.entities.FileInfo;
 import org.koreait.file.services.FileInfoService;
+import org.koreait.global.constants.Device;
+import org.koreait.global.entities.SiteConfig;
+import org.koreait.global.services.CodeValueService;
 import org.koreait.member.libs.MemberUtil;
 import org.springframework.context.MessageSource;
 import org.springframework.context.support.ResourceBundleMessageSource;
@@ -24,6 +27,7 @@ public class Utils {
     private final MessageSource messageSource;
     private final FileInfoService fileInfoService;
     private final MemberUtil memberUtil;
+    private final CodeValueService codeValueService;
 
     public boolean isMobile() {
 
@@ -42,7 +46,13 @@ public class Utils {
      * @return
      */
     public String tpl(String path) {
+        SiteConfig config = codeValueService.get("siteConfig", SiteConfig.class);
+
         String prefix = isMobile() ? "mobile" : "front";
+
+        if (config != null && config.getDevice() != Device.ALL) {
+            prefix = config.getDevice() == Device.MOBILE ? "mobile" : "front";
+        }
 
         return String.format("%s/%s", prefix, path);
     }
@@ -61,13 +71,13 @@ public class Utils {
 
     public List<String> getMessages(String[] codes) {
 
-            return Arrays.stream(codes).map(c -> {
-                try {
-                    return getMessage(c);
-                } catch (Exception e) {
-                    return "";
-                }
-            }).filter(s -> !s.isBlank()).toList();
+        return Arrays.stream(codes).map(c -> {
+            try {
+                return getMessage(c);
+            } catch (Exception e) {
+                return "";
+            }
+        }).filter(s -> !s.isBlank()).toList();
 
     }
 
@@ -116,10 +126,20 @@ public class Utils {
     }
 
     public String showImage(Long seq, int width, int height, String className) {
+        if (seq == null) {
+            String url = getUrl("/common/images/no_image.png");
+            return showImage(null, url, width, height, "image", className);
+        }
+
         return showImage(seq, null, width, height, "image", className);
     }
 
     public String showBackground(Long seq, int width, int height, String className) {
+        if (seq == null) {
+            String url = getUrl("/common/images/no_image.png");
+            return showImage(null, url, width, height, "background", className);
+
+        }
         return showImage(seq, null, width, height, "background", className);
     }
 
@@ -151,7 +171,9 @@ public class Utils {
                 imageUrl = String.format("%s/api/file/thumb?url=%s&width=%d&height=%d", request.getContextPath(), url, width, height);
             }
 
-            if (!StringUtils.hasText(imageUrl)) return "";
+            if (!StringUtils.hasText(imageUrl)) {
+                imageUrl = String.format("%s/common/images/no_image.png", request.getContextPath());
+            }
 
             mode = Objects.requireNonNullElse(mode, "image");
             className = Objects.requireNonNullElse(className, "image");
@@ -197,7 +219,7 @@ public class Utils {
      */
     public String nl2br(String text) {
         return text == null ? "" : text.replaceAll("\\r", "")
-                                        .replaceAll("\\n", "<br>");
+                .replaceAll("\\n", "<br>");
     }
 
     public String popup(String url, int width, int height) {

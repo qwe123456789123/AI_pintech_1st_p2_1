@@ -117,7 +117,7 @@ public class KakaoLoginService implements SocialLoginService {
 
     @Override
     public String getLoginUrl(String redirectUrl) {
-        SocialConfig socialConfig = codeValueService.get("socialConfig", SocialConfig.class);
+        SocialConfig socialConfig = Objects.requireNonNullElseGet(codeValueService.get("socialConfig", SocialConfig.class), SocialConfig::new);
         String restApiKey = socialConfig.getKakaoRestApiKey();
         if (!socialConfig.isUseKakaoLogin() || !StringUtils.hasText(restApiKey)) {
             return null;

@@ -51,6 +51,7 @@ public class BasicController implements SubMenus {
 
         SiteConfig form = Objects.requireNonNullElseGet(codeValueService.get("siteConfig", SiteConfig.class), SiteConfig::new);
 
+        form.setDevice = Objects.requireNonNullElseGet(codeValueService.get( form.getDevice()));
         model.addAttribute("siteConfig", form);
 
         return "admin/basic/siteConfig";
