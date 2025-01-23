@@ -1,0 +1,108 @@
+/* 메인 배너 S */
+.main-banner .banner {
+    height: 768px;
+}
+
+
+
+.main-banner a {
+    position: relative;
+    display: block;
+    height: 768px;
+}
+
+.main-banner .banner1 {
+    background:url('../../images/main/main_banner1.jpg') no-repeat center center;
+    background-size: cover;
+}
+
+.main-banner .banner2 {
+    background:url('../../images/main/main_banner2.png') no-repeat center center;
+    background-size: cover;
+}
+
+.main-banner .banner3 {
+    background:url('../../images/main/main_banner3.png') no-repeat center center;
+    background-size: cover;
+}
+
+@media screen and (max-width: 1000px) {
+    .main-banner .banner, .main-banner a {
+        height: 650px;
+    }
+}
+
+@media screen and (max-width: 900px) {
+    .main-banner .banner, .main-banner a {
+            height: 600px;
+        }
+}
+
+@media screen and (max-width: 700px) {
+    .main-banner .banner, .main-banner a {
+            height: 550px;
+        }
+}
+
+.main-banner .more-button {
+    position: absolute;
+    width: 330px;
+    height: 63px;
+    bottom: 80px;
+    left: calc(50% - 165px);
+    border: 1px solid #000;
+    background:rgba(0, 0, 0, 0.8);
+    cursor: pointer;
+    color: #fff;
+    text-align: center;
+    line-height: 61px;
+    transform: skew(-20deg);
+}
+
+.main-banner .more-button::after {
+    content: '';
+    width: 10px;
+    height: 20px;
+    background:url('../../images/icon_more.png') no-repeat center center;
+    position: absolute;
+    right: 70px;
+    top: calc(50% - 10px);
+    transform: skew(20deg);
+}
+
+.main-banner .more-button > span {
+    color: #fff;
+    transform: skew(20deg);
+    display: block;
+    font-size: 1.62rem;
+    font-weight: 700;
+}
+
+.main-banner .swiper-button-prev, .main-banner .swiper-button-next {
+    width: 86px;
+    height: 86px;
+    opacity: 1;
+    top: calc(50% - 43px);
+}
+
+.main-banner .swiper-button-prev {
+    background: transparent url('../../images/prev.png') no-repeat center center;
+    left: 50px;
+}
+
+.main-banner .swiper-button-prev::after, .main-banner .swiper-button-next::after {
+    display: none;
+}
+
+.main-banner .swiper-button-next {
+    background: transparent url('../../images/next.png') no-repeat center center;
+    right: 50px;
+}
+/* 메인 배너 E */
+
+/* 새로운 소식 S */
+.latest-news {
+    background:url('../../images/main/bg_pattern.jpg');
+}
+
+/* 새로운 소식 E */
